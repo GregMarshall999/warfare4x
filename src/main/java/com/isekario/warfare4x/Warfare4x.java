@@ -42,7 +42,7 @@ public class Warfare4x extends GameApplication {
     protected void initGameVars(Map<String, Object> vars) {
         GeneratorUtil.setMapWidth(50);
         GeneratorUtil.setMapHeight(50);
-        vars.put("MAP", GeneratorUtil.generate(1));
+        vars.put("MAP", GeneratorUtil.generate(20));
     }
 
     @Override

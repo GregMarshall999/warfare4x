@@ -24,13 +24,18 @@ public final class GeneratorUtil
         GeneratorUtil.mapHeight = mapHeight;
     }
 
-    //Observed min is -0.6 / max is 0.6
+    /**
+     * Takes a noise value and passes it through a terrain generator filter
+     * Values appear to fluctuate between -1.0 and 1.0
+     * @param value - Noise value
+     * @return - Terrain type from the filtered noise
+     */
     private static GridType valueToGrid(double value) {
-        if(value < -0.3)
+        if(value < -0.5)
             return GridType.OCEAN_DEEP;
         if(value < 0)
             return GridType.OCEAN_COAST;
-        if(value < 0.3)
+        if(value < 0.5)
             return GridType.BEACH;
         return GridType.GRASS;
     }
