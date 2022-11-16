@@ -7,7 +7,10 @@ public enum MapType
     OCEAN_DEEP(Color.DARKBLUE),
     OCEAN_COAST(Color.BLUE),
     BEACH(Color.YELLOW),
-    GRASS(Color.GREEN);
+    PLAIN(Color.LIGHTGREEN),
+    HILL(Color.GREEN),
+    FOREST(Color.DARKGREEN),
+    MOUNTAIN(Color.GRAY);
 
     final Color color;
 

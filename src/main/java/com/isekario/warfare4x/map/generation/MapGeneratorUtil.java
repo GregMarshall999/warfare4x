@@ -34,13 +34,20 @@ public final class MapGeneratorUtil
      * @return - Terrain type from the filtered noise
      */
     private static Entity valueToGrid(double value, double y, double x) {
-        if(value < -0.5)
-            return spawn("oceanDeep", x*getMapUnitSize(), y*getMapUnitSize());
-        if(value < 0)
-            return spawn("oceanCoast", x*getMapUnitSize(), y*getMapUnitSize());
-        if(value < 0.5)
-            return spawn("beach", x*getMapUnitSize(), y*getMapUnitSize());
-        return spawn("grass", x*getMapUnitSize(), y*getMapUnitSize());
+        double xPos = x*getMapUnitSize();
+        double yPos = y*getMapUnitSize();
+
+        if(value < -2.0/3)
+            return spawn("oceanDeep", xPos, yPos);
+        if(value < -0.75/3)
+            return spawn("oceanCoast", xPos, yPos);
+        if(value < -0.5/3)
+            return spawn("beach", xPos, yPos);
+        if (value < 1.0/3)
+            return spawn("plain", xPos, yPos);
+        if (value < 2.5/3)
+            return spawn("hill", xPos, yPos);
+        return spawn("mountain", xPos, yPos);
     }
 
     /**

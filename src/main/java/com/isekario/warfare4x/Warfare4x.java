@@ -42,6 +42,7 @@ public class Warfare4x extends GameApplication {
 
     @Override
     protected void initGameVars(Map<String, Object> vars) {
+        //Map generation
         getGameWorld().addEntityFactory(new MapFactory());
         MapGeneratorUtil.setMapWidth(50);
         MapGeneratorUtil.setMapHeight(50);
@@ -58,16 +59,6 @@ public class Warfare4x extends GameApplication {
 
     @Override
     protected void initGame() {
-        //Draw map
-        /*Entity[][] map = FXGL.geto("MAP");
-        for (int x = 0; x < map.length; x++) {
-            for (int y = 0; y < map[x].length; y++) {
-                FXGL.entityBuilder()
-                        .at(x*MapUtil.getMapUnitSize(), y*MapUtil.getMapUnitSize())
-                        .view(new Rectangle(MapUtil.getMapUnitSize(), MapUtil.getMapUnitSize(), map[x][y].getColor()))
-                        .buildAndAttach();
-            }
-        }*/
     }
 
     public static void main(String[] args) {
