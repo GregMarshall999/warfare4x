@@ -6,15 +6,17 @@ import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.app.MenuItem;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.localization.Language;
-import com.isekario.warfare4x.map.GridType;
-import com.isekario.warfare4x.map.MapUtil;
-import com.isekario.warfare4x.map.generation.GeneratorUtil;
+import com.isekario.warfare4x.map.generation.MapGeneratorUtil;
 import com.isekario.warfare4x.util.Util;
-import javafx.scene.shape.Rectangle;
+import com.isekario.warfare4x.util.entityfactories.MapFactory;
+import javafx.geometry.Orientation;
+import javafx.scene.control.Slider;
 
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
+
+import static com.almasb.fxgl.dsl.FXGL.getGameWorld;
 
 public class Warfare4x extends GameApplication {
 
@@ -40,23 +42,32 @@ public class Warfare4x extends GameApplication {
 
     @Override
     protected void initGameVars(Map<String, Object> vars) {
-        GeneratorUtil.setMapWidth(50);
-        GeneratorUtil.setMapHeight(50);
-        vars.put("MAP", GeneratorUtil.generate(20));
+        getGameWorld().addEntityFactory(new MapFactory());
+        MapGeneratorUtil.setMapWidth(50);
+        MapGeneratorUtil.setMapHeight(50);
+        vars.put("MAP", MapGeneratorUtil.generate(20));
+    }
+
+    @Override
+    protected void initUI() {
+        //Slider ui
+        Slider mapGeneratorZoom = new Slider(0.0, 10.0, 5.0);
+        mapGeneratorZoom.setOrientation(Orientation.HORIZONTAL);
+        FXGL.addUINode(mapGeneratorZoom, FXGL.getAppWidth() - 200, 100);
     }
 
     @Override
     protected void initGame() {
-        GridType[][] map = FXGL.geto("MAP");
-
+        //Draw map
+        /*Entity[][] map = FXGL.geto("MAP");
         for (int x = 0; x < map.length; x++) {
             for (int y = 0; y < map[x].length; y++) {
                 FXGL.entityBuilder()
-                        .at(x*MapUtil.getGridSize(), y*MapUtil.getGridSize())
-                        .view(new Rectangle(MapUtil.getGridSize(), MapUtil.getGridSize(), map[x][y].getColor()))
+                        .at(x*MapUtil.getMapUnitSize(), y*MapUtil.getMapUnitSize())
+                        .view(new Rectangle(MapUtil.getMapUnitSize(), MapUtil.getMapUnitSize(), map[x][y].getColor()))
                         .buildAndAttach();
             }
-        }
+        }*/
     }
 
     public static void main(String[] args) {
