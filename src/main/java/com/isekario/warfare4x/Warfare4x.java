@@ -4,12 +4,12 @@ import com.almasb.fxgl.app.ApplicationMode;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.app.MenuItem;
-import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.localization.Language;
 import com.isekario.warfare4x.map.generation.MapGeneratorUtil;
 import com.isekario.warfare4x.util.Util;
 import com.isekario.warfare4x.util.entityfactories.MapFactory;
 import javafx.geometry.Orientation;
+import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 
 import java.io.IOException;
@@ -19,10 +19,13 @@ import java.util.List;
 import java.util.Map;
 
 import static com.almasb.fxgl.dsl.FXGL.addUINode;
+import static com.almasb.fxgl.dsl.FXGL.getAppWidth;
 import static com.almasb.fxgl.dsl.FXGL.getGameWorld;
 import static com.isekario.warfare4x.map.generation.MapGeneratorUtil.generateTerrainFile;
+import static com.isekario.warfare4x.map.generation.MapGeneratorUtil.setGenerationDetail;
 import static com.isekario.warfare4x.map.generation.MapGeneratorUtil.setGenerationZoom;
 import static com.isekario.warfare4x.map.generation.MapGeneratorUtil.updateMap;
+import static com.isekario.warfare4x.util.PerlinNoise.regenerateSeed;
 import static com.isekario.warfare4x.util.Util.getAssetManager;
 
 public class Warfare4x extends GameApplication {
@@ -40,6 +43,7 @@ public class Warfare4x extends GameApplication {
         MapGeneratorUtil.setMapWidth(100);
         MapGeneratorUtil.setMapHeight(100);
         setGenerationZoom(10);
+        setGenerationDetail(3);
         generateTerrainFile();
     }
 
@@ -71,15 +75,22 @@ public class Warfare4x extends GameApplication {
     protected void initUI() {
         //Slider ui
         Slider mapGeneratorZoom = new Slider(0.0, 20.0, 10.0);
-
         mapGeneratorZoom.valueProperty().addListener((observableValue, oldValue, newValue) -> {
             setGenerationZoom(newValue.intValue());
             generateTerrainFile();
             updateMap();
         });
-
         mapGeneratorZoom.setOrientation(Orientation.HORIZONTAL);
-        addUINode(mapGeneratorZoom, FXGL.getAppWidth() - 200, 100);
+        addUINode(mapGeneratorZoom, getAppWidth() - 200, 100);
+
+        //Seed regen UI
+        Button regenSeed = new Button("Regenerate map");
+        regenSeed.setOnAction(actionEvent -> {
+            regenerateSeed();
+            generateTerrainFile();
+            updateMap();
+        });
+        addUINode(regenSeed, getAppWidth() - 200, 200);
     }
 
     @Override

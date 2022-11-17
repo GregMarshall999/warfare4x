@@ -1,21 +1,19 @@
 package com.isekario.warfare4x.map.generation;
 
-import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.level.text.TextLevelLoader;
-import com.isekario.warfare4x.util.PerlinNoise;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-import static com.almasb.fxgl.dsl.FXGL.spawn;
 import static com.almasb.fxgl.dsl.FXGLForKtKt.getAssetLoader;
 import static com.almasb.fxgl.dsl.FXGLForKtKt.getGameWorld;
-import static com.isekario.warfare4x.map.MapUtil.getMapUnitSize;
+import static com.isekario.warfare4x.util.PerlinNoise.noise;
 import static com.isekario.warfare4x.util.Util.getAssetManager;
 import static com.isekario.warfare4x.util.Util.getAssetsLevelsDir;
 import static com.isekario.warfare4x.util.Util.getMap;
 import static com.isekario.warfare4x.util.Util.getTerrainFile;
 import static com.isekario.warfare4x.util.Util.setMap;
+import static java.lang.Math.pow;
 
 public final class MapGeneratorUtil
 {
@@ -77,6 +75,18 @@ public final class MapGeneratorUtil
         return 'm'; //mountain level
     }
 
+    private static double noiseValueAt(double x, double y) {
+        double n = 0.0;
+        double octave;
+
+        for (int i = 0; i < generationDetail; i++) {
+            octave = pow(2, i);
+            n += noise(x*generationZoom*octave, y*generationZoom*octave)/octave;
+        }
+
+        return n;
+    }
+
     /**
      * Terrain generator.
      * Updates the current terrain file in the assets/levels folder with new generation data
@@ -89,7 +99,7 @@ public final class MapGeneratorUtil
             for (int x = 0; x < mapWidth; x++) {
                 nx = x / (double) mapWidth - 0.5;
                 ny = y / (double) mapHeight - 0.5;
-                mapContent.append(valueToChar(PerlinNoise.noise(nx*generationZoom, ny*generationZoom)));
+                mapContent.append(valueToChar(noiseValueAt(nx, ny)));
             }
             mapContent.append("\n");
         }
