@@ -21,7 +21,8 @@ public final class MapGeneratorUtil
 {
     private static int mapWidth;
     private static int mapHeight;
-    private static int generationZoom;
+    private static int generationZoom; //frequency
+    private static int generationDetail; //octaves
 
     //region getters/setters
     public static int getMapWidth() {
@@ -46,6 +47,14 @@ public final class MapGeneratorUtil
 
     public static void setGenerationZoom(int generationZoom) {
         MapGeneratorUtil.generationZoom = generationZoom;
+    }
+
+    public static int getGenerationDetail() {
+        return generationDetail;
+    }
+
+    public static void setGenerationDetail(int generationDetail) {
+        MapGeneratorUtil.generationDetail = generationDetail;
     }
     //endregion
 
@@ -92,57 +101,11 @@ public final class MapGeneratorUtil
         }
     }
 
+    /**
+     * Reloads the map from the terrain file
+     */
     public static void updateMap() {
         setMap(getAssetLoader().loadLevel(getTerrainFile(), new TextLevelLoader(10, 10, '0')));
         getGameWorld().setLevel(getMap());
     }
-
-    //region depreciated
-    /**
-     * Takes a noise value and passes it through a terrain generator filter
-     * Values appear to fluctuate between -1.0 and 1.0
-     * @param value - Noise value
-     * @param y - entity y coordinate
-     * @param x - entity x coordinate
-     * @return - Terrain type from the filtered noise
-     */
-    @Deprecated
-    private static Entity valueToEntity(double value, double y, double x) {
-        double xPos = x*getMapUnitSize();
-        double yPos = y*getMapUnitSize();
-
-        if(value < -2.0/3)
-            return spawn("oceanDeep", xPos, yPos);
-        if(value < -0.75/3)
-            return spawn("oceanCoast", xPos, yPos);
-        if(value < -0.5/3)
-            return spawn("beach", xPos, yPos);
-        if (value < 1.0/3)
-            return spawn("plain", xPos, yPos);
-        if (value < 2.5/3)
-            return spawn("hill", xPos, yPos);
-        return spawn("mountain", xPos, yPos);
-    }
-
-    /**
-     * Generates terrain
-     * @return - Map entity list
-     */
-    @Deprecated
-    public static Entity[][] generate() {
-        Entity[][] mapTiles = new Entity[mapWidth][mapHeight];
-        double nx, ny;
-
-        for (int y = 0; y < mapHeight; y++) {
-            for (int x = 0; x < mapWidth; x++) {
-                nx = x/(double)mapWidth - 0.5;
-                ny = y/(double)mapHeight - 0.5;
-                Entity entity = valueToEntity(PerlinNoise.noise(nx*generationZoom, ny*generationZoom), y, x);
-                mapTiles[y][x] = entity;
-            }
-        }
-
-        return mapTiles;
-    }
-    //endregion
 }
