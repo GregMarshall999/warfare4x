@@ -27,37 +27,37 @@ public final class MapFactory implements EntityFactory
                 .build();
     }
 
-    @Spawns("oceanDeep")
+    @Spawns("d, oceanDeep")
     public Entity newOceanDeep(SpawnData data) {
         return buildEntity(data, OCEAN_DEEP);
     }
 
-    @Spawns("oceanCoast")
+    @Spawns("c, oceanCoast")
     public Entity newOceanCoast(SpawnData data) {
         return buildEntity(data, OCEAN_COAST);
     }
 
-    @Spawns("beach")
+    @Spawns("b, beach")
     public Entity newBeach(SpawnData data) {
         return buildEntity(data, BEACH);
     }
 
-    @Spawns("plain")
+    @Spawns("p, plain")
     public Entity newPlain(SpawnData data) {
         return buildEntity(data, PLAIN);
     }
 
-    @Spawns("hill")
+    @Spawns("h, hill")
     public Entity newHill(SpawnData data) {
         return buildEntity(data, HILL);
     }
 
-    @Spawns("forest")
+    @Spawns("f, forest")
     public Entity newForest(SpawnData data) {
         return buildEntity(data, FOREST);
     }
 
-    @Spawns("mountain")
+    @Spawns("m, mountain")
     public Entity newMountain(SpawnData data) {
         return buildEntity(data, MOUNTAIN);
     }

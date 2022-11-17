@@ -12,13 +12,36 @@ import com.isekario.warfare4x.util.entityfactories.MapFactory;
 import javafx.geometry.Orientation;
 import javafx.scene.control.Slider;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 
+import static com.almasb.fxgl.dsl.FXGL.addUINode;
 import static com.almasb.fxgl.dsl.FXGL.getGameWorld;
+import static com.isekario.warfare4x.map.generation.MapGeneratorUtil.generateTerrainFile;
+import static com.isekario.warfare4x.map.generation.MapGeneratorUtil.setGenerationZoom;
+import static com.isekario.warfare4x.map.generation.MapGeneratorUtil.updateMap;
+import static com.isekario.warfare4x.util.Util.getAssetManager;
 
 public class Warfare4x extends GameApplication {
+
+    @Override
+    protected void onPreInit() {
+        //directory checks
+        try {
+            getAssetManager().assetsDirCheck();
+        } catch (URISyntaxException | IOException e) {
+            e.printStackTrace();
+        }
+
+        //Map generation
+        MapGeneratorUtil.setMapWidth(100);
+        MapGeneratorUtil.setMapHeight(100);
+        setGenerationZoom(10);
+        generateTerrainFile();
+    }
 
     @Override
     protected void initSettings(GameSettings gameSettings) {
@@ -42,23 +65,27 @@ public class Warfare4x extends GameApplication {
 
     @Override
     protected void initGameVars(Map<String, Object> vars) {
-        //Map generation
-        getGameWorld().addEntityFactory(new MapFactory());
-        MapGeneratorUtil.setMapWidth(50);
-        MapGeneratorUtil.setMapHeight(50);
-        vars.put("MAP", MapGeneratorUtil.generate(20));
     }
 
     @Override
     protected void initUI() {
         //Slider ui
-        Slider mapGeneratorZoom = new Slider(0.0, 10.0, 5.0);
+        Slider mapGeneratorZoom = new Slider(0.0, 20.0, 10.0);
+
+        mapGeneratorZoom.valueProperty().addListener((observableValue, oldValue, newValue) -> {
+            setGenerationZoom(newValue.intValue());
+            generateTerrainFile();
+            updateMap();
+        });
+
         mapGeneratorZoom.setOrientation(Orientation.HORIZONTAL);
-        FXGL.addUINode(mapGeneratorZoom, FXGL.getAppWidth() - 200, 100);
+        addUINode(mapGeneratorZoom, FXGL.getAppWidth() - 200, 100);
     }
 
     @Override
     protected void initGame() {
+        getGameWorld().addEntityFactory(new MapFactory());
+        updateMap();
     }
 
     public static void main(String[] args) {
